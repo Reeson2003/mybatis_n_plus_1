@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="AuthorBestMapper">
+
+    <resultMap id="author" type="com.test.model.Author">
+        <id property="id" column="author_id"/>
+        <result property="name" column="author_name"/>
+        <collection property="posts" column="author_id" javaType="ArrayList" ofType="com.test.model.Post">
+            <id property="id" column="post_id"/>
+            <result property="text" column="post_text"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="selectAuthorBestPractice" parameterType="string" resultMap="author">
+
+        SELECT * FROM public.author LEFT JOIN author_post ON (author.author_id = author_post.author_id) JOIN post ON (author_post.post_id = post.post_id) WHERE author_name = #{name}
+
+    </select>
+
+</mapper>
