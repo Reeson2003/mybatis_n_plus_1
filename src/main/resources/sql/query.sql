@@ -24,6 +24,7 @@ create table if not exists author_post(
 
 insert into "public".author (author_name, author_id) values ('ivan', 1);
 insert into "public".author (author_name, author_id) values ('ivan', 2);
+insert into "public".author (author_name, author_id) values ('ivan', 3);
 
 insert into "public".post (post_text, post_id) values ('hello0', 1);
 insert into "public".post (post_text, post_id) values ('hello1', 2);

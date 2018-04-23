@@ -17,7 +17,7 @@
 
     <select id="selectAuthorBestPractice" parameterType="string" resultMap="author">
 
-        SELECT * FROM public.author LEFT JOIN author_post ON (author.author_id = author_post.author_id) JOIN post ON (author_post.post_id = post.post_id) WHERE author_name = #{name}
+        SELECT * FROM public.author LEFT JOIN author_post ON (author.author_id = author_post.author_id) LEFT JOIN post ON (author_post.post_id = post.post_id) WHERE author_name = #{name}
 
     </select>
 
