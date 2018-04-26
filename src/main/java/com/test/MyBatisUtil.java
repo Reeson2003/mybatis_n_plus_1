@@ -2,6 +2,7 @@ package com.test;
 
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.logging.log4j2.Log4j2Impl;
 import org.apache.ibatis.mapping.Environment;
@@ -32,10 +33,9 @@ public class MyBatisUtil {
     private static MyBatisUtil instance = null;
 
     private SqlSessionFactory sqlSessionFactory;
-    private DataSource dataSource;
 
     private MyBatisUtil(String url, String username, String password, String driver) {
-        dataSource = getDataSource(url, username, password, driver);
+        DataSource dataSource = getDataSource(url, username, password, driver);
         TransactionFactory transactionFactory = new JdbcTransactionFactory();
         Environment environment = new Environment("development", transactionFactory, dataSource);
         Configuration configuration = new Configuration(environment);
@@ -43,9 +43,22 @@ public class MyBatisUtil {
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
     }
 
+    private MyBatisUtil(String configFilePath) {
+        try {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsReader(configFilePath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static synchronized void init(String url, String username, String password, String driver) {
         if (instance == null)
             instance = new MyBatisUtil(url, username, password, driver);
+    }
+
+    public static synchronized void init(String configFilePath) {
+        if (instance == null)
+            instance = new MyBatisUtil(configFilePath);
     }
 
     public static synchronized void addMappers(Class... mappers) {
@@ -81,7 +94,7 @@ public class MyBatisUtil {
 
     private void runScript(String fileName) {
         try {
-            ScriptRunner runner = new ScriptRunner(dataSource.getConnection());
+            ScriptRunner runner = new ScriptRunner(sqlSessionFactory.openSession().getConnection());
             runner.setAutoCommit(true);
             runner.setSendFullScript(true);
             runner.setStopOnError(true);
@@ -89,7 +102,7 @@ public class MyBatisUtil {
             runner.setErrorLogWriter(new Writer(LOGGER::error));
             runner.runScript(getResourceAsReader(fileName));
             runner.closeConnection();
-        } catch (SQLException | IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

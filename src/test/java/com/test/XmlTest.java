@@ -1,5 +1,6 @@
 package com.test;
 
+import com.test.model.Author;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
 
@@ -14,10 +15,9 @@ public class XmlTest implements JDBCParams {
         MyBatisUtil.init(URL, USERNAME, PASSWORD, DRIVER);
         MyBatisUtil.addMapper("mappers/AuthorBestMapper.xml");
         SqlSession session = MyBatisUtil.getSqlSessionFactory().openSession();
-//        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream("mybatis-config.xml"));
-//        SqlSession session = sqlSessionFactory.openSession();
-        List<Object> ivan = session.selectList("AuthorBestMapper.selectAuthorBestPractice", "ivan");
-        System.out.println("ivan = " + ivan);
+
+        List<Author> ivan = session.selectList("AuthorBestMapper.selectAuthorBestPractice", "ivan");
+
         session.close();
     }
 }
