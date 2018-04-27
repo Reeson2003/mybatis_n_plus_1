@@ -5,7 +5,7 @@ package com.test;
  */
 public interface JDBCParams {
     String DRIVER = "org.postgresql.Driver";
-    String URL = "jdbc:postgresql://localhost/mybatis_test";
+    String URL = "jdbc:postgresql://localhost:5432/mybatis_test";
     String USERNAME = "test";
     String PASSWORD = "test";
 }

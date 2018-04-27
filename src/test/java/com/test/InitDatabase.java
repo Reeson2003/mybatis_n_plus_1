@@ -1,5 +1,6 @@
 package com.test;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -7,6 +8,7 @@ import org.junit.Test;
  */
 public class InitDatabase implements JDBCParams {
     @Test
+    @Ignore
     public void initDatabase() {
         MyBatisUtil.init(URL, USERNAME, PASSWORD, DRIVER);
         MyBatisUtil.runSqlScript("sql/query.sql");
